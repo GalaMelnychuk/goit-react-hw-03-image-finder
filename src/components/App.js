@@ -8,42 +8,19 @@ import Loader from "./loader/Loader";
 // import Modal from "./modal/Modal";
 const KEY = "15738789-70e175d37a04d1dee6d70d765";
 
+// const mapper = images => {
+//   return images.map(({ objectID: id, url: link, ...props }) => ({
+//     id,
+//     link,
+//     ...props,
+//   }));
+// };
+
 class App extends Component {
   state = {
     images: [],
-    query: "cat",
     isLoading: false,
-  };
 
-  async getImages () {
-    this.setState({
-      isLoading: true
-    });
-    try { const res = await axios
-    .get(
-      `https://pixabay.com/api/?key=${KEY}&q=${this.state.query}&image_type=photo`
-    )
-    .finally(() => {
-      this.setState({isLoading: false})
-    })
-    
-    // let imgArray = res.data.hits ? Object.keys(res.data.hits).map(key => {
-    //   return {...res.data.hits[key]}
-    // }) : [];
-    this.setState({ images: res.data.hits})
-    console.log('imgArray', res.data.hits)}
-
-
-    catch (error) {
-      console.log('error', error)
-    }
-   
-  };
-
-  handleSubmitForm = e => {
-    this.getImages();
-    e.preventDefault();
-    this.setState({ query:  e.target.elements[1].value });
   };
 
   componentDidMount() {
@@ -58,6 +35,33 @@ class App extends Component {
       this.getImages(nextCategory);
     }
   }
+
+  async getImages (searchQueryImages = "cat") {
+    this.setState({
+      isLoading: true
+    });
+    try { const res = await axios
+    .get(
+      `https://pixabay.com/api/?key=${KEY}&q=${searchQueryImages}&image_type=photo`
+    )
+    .finally(() => {
+      this.setState({isLoading: false})
+    })
+    
+    this.setState({ images: res.data.hits})}
+
+    catch (error) {
+      console.log('error', error)
+    }
+   
+  };
+
+  handleSubmitForm = e => {
+    this.getImages(e.target.elements[1].value)
+    // console.log('e.target.value', e.target.value)
+    e.preventDefault();
+    e.target.elements[1].value=""
+  };
 
   render() {
     const { images, isLoading} = this.state;
