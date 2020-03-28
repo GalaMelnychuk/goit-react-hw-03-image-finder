@@ -36,13 +36,13 @@ class App extends Component {
     }
   }
 
-  async getImages (searchQueryImages = "cat") {
+  async getImages (query='film') {
     this.setState({
       isLoading: true
     });
     try { const res = await axios
     .get(
-      `https://pixabay.com/api/?key=${KEY}&q=${searchQueryImages}&image_type=photo`
+      `https://pixabay.com/api/?key=${KEY}&q=${query}&image_type=photo`
     )
     .finally(() => {
       this.setState({isLoading: false})
@@ -58,7 +58,6 @@ class App extends Component {
 
   handleSubmitForm = e => {
     this.getImages(e.target.elements[1].value)
-    // console.log('e.target.value', e.target.value)
     e.preventDefault();
     e.target.elements[1].value=""
   };
