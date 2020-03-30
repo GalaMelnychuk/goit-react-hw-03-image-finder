@@ -33,7 +33,10 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { query: prevCategory } = prevState;
     const { query: nextCategory } = this.state;
-
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth"
+    });
     if (prevCategory !== nextCategory) {
       this.getImages(nextCategory);
     }
@@ -82,16 +85,11 @@ class App extends Component {
     const pageStep = 1;
     await this.setState(prevState => ({ page: prevState.page + pageStep }));
     await this.getImages();
-  };
-  scroll = () => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: "smooth"
-    });
+
   };
 
   render() {
-    const { images, isLoading,  isModalOpen, largeImageUrl, page } = this.state;
+    const { images, isLoading,  isModalOpen, largeImageUrl} = this.state;
     const loading = isLoading ? <Loader /> : null;
 
     return (
@@ -101,7 +99,6 @@ class App extends Component {
         {loading}
         <ImageGallery images={images} onOpenImage={this.setLargeImage}/>
         <Button onloadMoreImg = {this.loadMoreImg}/>
-        {page !== 1 && this.scroll()}
         {isModalOpen && <Modal url={largeImageUrl} onClose ={this.toggleModal} />}
       </>
     );
