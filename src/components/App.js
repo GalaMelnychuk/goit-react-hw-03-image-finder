@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import axios from "axios";
-
 import Searchbar from "./searchbar/Searchbar";
 import ImageGallery from "./imageGallery/ImageGallery";
 import Loader from "./loader/Loader";
@@ -20,7 +19,7 @@ class App extends Component {
   state = {
     images: [],
     isLoading: false,
-    query: "home",
+    query: "color",
     page: 1,
     isModalOpen: false,
     largeImageUrl: null
@@ -34,8 +33,8 @@ class App extends Component {
     const { query: prevCategory } = prevState;
     const { query: nextCategory } = this.state;
     window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: "smooth"
+    top: document.documentElement.scrollHeight,
+    behavior: "smooth"
     });
     if (prevCategory !== nextCategory) {
       this.getImages(nextCategory);
@@ -63,9 +62,10 @@ class App extends Component {
   }
 
   handleSubmitForm = e => {
-    this.setState({ query: e.target.elements[1].value });
-    // this.getImages(e.target.elements[1].value)
     e.preventDefault();
+    this.setState({ query: e.target.elements[1].value });
+    // await this.getImages(e.target.elements[1].value)
+    
     e.target.elements[1].value = "";
   };
 
@@ -82,10 +82,8 @@ class App extends Component {
   };
 
   loadMoreImg = async () => {
-    const pageStep = 1;
-    await this.setState(prevState => ({ page: prevState.page + pageStep }));
+    await this.setState(prevState => ({ page: prevState.page + 1 }));
     await this.getImages();
-
   };
 
   render() {
@@ -94,7 +92,6 @@ class App extends Component {
 
     return (
       <>
-        
         <Searchbar onHandleSubmitForm={this.handleSubmitForm} />
         {loading}
         <ImageGallery images={images} onOpenImage={this.setLargeImage}/>

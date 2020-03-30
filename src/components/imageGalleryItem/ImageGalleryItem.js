@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./ImageGalleryItem.module.css";
 
-
 const ImageGalleryItem = ({webUrl, largeUrl, onOpenImage}) => {
   return (
     <li className="ImageGalleryItem" >
@@ -10,7 +9,6 @@ const ImageGalleryItem = ({webUrl, largeUrl, onOpenImage}) => {
         alt={largeUrl}
         className={styles.ImageGalleryItemImage}
         onClick={()=>onOpenImage(largeUrl)}
-        
       />
     </li>
   );
