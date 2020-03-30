@@ -20,7 +20,7 @@ class App extends Component {
   state = {
     images: [],
     isLoading: false,
-    query: "cat",
+    query: "home",
     page: 1,
     isModalOpen: false,
     largeImageUrl: null
