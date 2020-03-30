@@ -19,15 +19,16 @@ class App extends Component {
   state = {
     images: [],
     isLoading: false,
-    query: "color",
+    query: "",
     page: 1,
     isModalOpen: false,
-    largeImageUrl: null
+    largeImageUrl: ''
   };
 
-  componentDidMount() {
-    this.getImages();
-  }
+  // componentDidMount() {
+  //   this.getImages();
+    
+  // }
 
   componentDidUpdate(prevProps, prevState) {
     const { query: prevCategory } = prevState;
@@ -53,7 +54,8 @@ class App extends Component {
         .finally(() => {
           this.setState({ isLoading: false });
         });
-        const newImagesArray = res.data.hits;
+        
+      const newImagesArray = res.data.hits;
       this.setState({ images: newImagesArray})
 
     } catch (error) {
@@ -63,18 +65,16 @@ class App extends Component {
 
   handleSubmitForm = e => {
     e.preventDefault();
-    this.setState({ query: e.target.elements[1].value });
+    this.setState({ query: e.target.elements[1].value, images: [] });
     // await this.getImages(e.target.elements[1].value)
-    
-    e.target.elements[1].value = "";
   };
 
   // opensModal = () => this.setState({isModalOpen: true})
   // closeModal = () => this.setState({isModalOpen: false})
 
   setLargeImage = largeImgUrl => {
-    this.setState({ largeImageUrl: largeImgUrl });
-    this.toggleModal();
+  this.setState({ largeImageUrl: largeImgUrl });
+  this.toggleModal();
   };
 
   toggleModal = () => {
@@ -82,12 +82,19 @@ class App extends Component {
   };
 
   loadMoreImg = async () => {
-    await this.setState(prevState => ({ page: prevState.page + 1 }));
+    
     await this.getImages();
+    await this.setState(prevState => ({ page: prevState.page + 1, loading: true }));
   };
 
+  scroll = () =>
+  (window.scrollTo({
+    top: document.documentElement.scrollHeight,
+    behavior: "smooth"
+    }))
+
   render() {
-    const { images, isLoading,  isModalOpen, largeImageUrl} = this.state;
+    const { images, isLoading,  isModalOpen, largeImageUrl, page, query} = this.state;
     const loading = isLoading ? <Loader /> : null;
 
     return (
@@ -95,7 +102,7 @@ class App extends Component {
         <Searchbar onHandleSubmitForm={this.handleSubmitForm} />
         {loading}
         <ImageGallery images={images} onOpenImage={this.setLargeImage}/>
-        <Button onloadMoreImg = {this.loadMoreImg}/>
+        {query && <Button onloadMoreImg = {this.loadMoreImg}/>}
         {isModalOpen && <Modal url={largeImageUrl} onClose ={this.toggleModal} />}
       </>
     );

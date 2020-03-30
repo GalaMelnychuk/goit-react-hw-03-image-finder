@@ -5,13 +5,12 @@ import ImageGalleryItem from "../imageGalleryItem/ImageGalleryItem";
 
 export default class ImageGallery extends Component {
 
-componentDidUpdate() {
-
-  window.scrollTo({
-    top: document.documentElement.scrollHeight,
-    behavior: "smooth"
-  }); 
-}
+// componentDidUpdate() {
+//   window.scrollTo({
+//     top: document.documentElement.scrollHeight,
+//     behavior: "smooth"
+//   }); 
+// }
   
   render () { 
     return (

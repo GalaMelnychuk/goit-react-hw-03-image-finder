@@ -2,7 +2,7 @@ import React, { Component, createRef } from "react";
 import styles from "./Modal.module.css";
 
 export default class Modal extends Component {
-  backdropRef = createRef();
+  // backdropRef = createRef();
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown);
@@ -53,7 +53,7 @@ export default class Modal extends Component {
 
   render() {
     const { url } = this.props;
-    console.log('this.props', this.props)
+    console.log('url', url)
     return (
       <div className={styles.Overlay}>
         <div onClick={this.closeOnClick} className={styles.Modal}>
