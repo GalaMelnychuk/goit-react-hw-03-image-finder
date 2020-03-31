@@ -25,21 +25,12 @@ class App extends Component {
     largeImageUrl: ''
   };
 
-  // componentDidMount() {
-  //   this.getImages();
-    
-  // }
 
   componentDidUpdate(prevProps, prevState) {
-    const { query: prevCategory } = prevState;
-    const { query: nextCategory } = this.state;
     window.scrollTo({
-    top: document.documentElement.scrollHeight,
-    behavior: "smooth"
-    });
-    if (prevCategory !== nextCategory) {
-      this.getImages(nextCategory);
-    }
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth"
+      });
   }
 
   async getImages() {
@@ -55,22 +46,23 @@ class App extends Component {
           this.setState({ isLoading: false });
         });
         
-      const newImagesArray = res.data.hits;
-      this.setState({ images: newImagesArray})
+        const newImagesArray = res.data.hits;
+      this.setState(prevState => ({ images: [...prevState.images, ...newImagesArray]}))
 
     } catch (error) {
       console.log("error", error);
     }
   }
 
-  handleSubmitForm = e => {
+  handleSubmitForm = async e => {
     e.preventDefault();
-    this.setState({ query: e.target.elements[1].value, images: [] });
-    // await this.getImages(e.target.elements[1].value)
+   await this.setState({ images: [] });
+   await this.getImages();
   };
 
-  // opensModal = () => this.setState({isModalOpen: true})
-  // closeModal = () => this.setState({isModalOpen: false})
+  handleChange = (e) => {
+    this.setState({ query: e.target.value }) 
+  }
 
   setLargeImage = largeImgUrl => {
   this.setState({ largeImageUrl: largeImgUrl });
@@ -82,27 +74,18 @@ class App extends Component {
   };
 
   loadMoreImg = async () => {
-    
+    await this.setState(prevState => ({ page: prevState.page + 1}));
     await this.getImages();
-    await this.setState(prevState => ({ page: prevState.page + 1, loading: true }));
   };
 
-  scroll = () =>
-  (window.scrollTo({
-    top: document.documentElement.scrollHeight,
-    behavior: "smooth"
-    }))
-
   render() {
-    const { images, isLoading,  isModalOpen, largeImageUrl, page, query} = this.state;
-    const loading = isLoading ? <Loader /> : null;
-
+    const { images, isLoading,  isModalOpen, largeImageUrl} = this.state;
     return (
       <>
-        <Searchbar onHandleSubmitForm={this.handleSubmitForm} />
-        {loading}
-        <ImageGallery images={images} onOpenImage={this.setLargeImage}/>
-        {query && <Button onloadMoreImg = {this.loadMoreImg}/>}
+        <Searchbar onHandleSubmitForm={this.handleSubmitForm} onHandleChange={this.handleChange} />
+       { isLoading ? <Loader /> :
+        <ImageGallery images={images} onOpenImage={this.setLargeImage}/>}
+        {images.length > 0 && <Button onloadMoreImg = {this.loadMoreImg}/>}
         {isModalOpen && <Modal url={largeImageUrl} onClose ={this.toggleModal} />}
       </>
     );

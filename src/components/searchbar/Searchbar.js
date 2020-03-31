@@ -1,7 +1,9 @@
 import React from "react";
 import styles from "./Searchbar.module.css";
 
-const Searchbar = ({ onHandleSubmitForm }) => {
+const Searchbar = ({ onHandleSubmitForm, onHandleChange }) => {
+
+
   return (
     <header className={styles.Searchbar}>
       <form className={styles.SearchForm} onSubmit={onHandleSubmitForm}>
@@ -9,6 +11,7 @@ const Searchbar = ({ onHandleSubmitForm }) => {
           <span className={styles.SearchFormButtonLabel}>Search</span>
         </button>
         <input
+        onChange={onHandleChange}
           className={styles.SearchFormInput}
           type="text"
           autoComplete="off"
